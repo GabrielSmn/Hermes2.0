@@ -4,6 +4,8 @@ const { Client, Location, List, Buttons, LocalAuth } = require('./index');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path'); // Importe a biblioteca path
+
 
 const app = express();
 const PORT = 3000;
@@ -11,6 +13,16 @@ const PORT = 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+
+// Configuração para servir arquivos estáticos da pasta 'public'
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Rota para a raiz (/) que renderiza a página de boas-vindas
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
 
 // Dados de exemplo (substitua pelo seu banco de dados real)
 let posts = [
@@ -20,8 +32,12 @@ let posts = [
 
 
 // Iniciar o servidor
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Servidor backend rodando em http://localhost:${PORT}`);
+
+  const localhostPage = await browser.newPage();
+  await localhostPage.goto(`http://localhost:${PORT}`, { waitUntil: 'domcontentloaded' });
+
 });
 
 
@@ -36,12 +52,13 @@ const client = new Client({
 
 client.initialize();
 
+
 // Rotas da API
 app.get('/api/ready', (req, res) => {
     res.json('req');
   });
   
-  app.post('/api/send_message', (req, res) => {
+app.post('/api/send_message', (req, res) => {
     const newMessage = req.body;
     console.log(req)
     try{
@@ -51,25 +68,6 @@ app.get('/api/ready', (req, res) => {
         res.status(201).json(newMessage);
     }catch(e){console.log(e)}
     
-  });
-  
-  app.put('/api/posts/:id', (req, res) => {
-    const postId = parseInt(req.params.id);
-    const updatedPost = req.body;
-    const index = posts.findIndex(post => post.id === postId);
-  
-    if (index !== -1) {
-      posts[index] = { ...posts[index], ...updatedPost };
-      res.json(posts[index]);
-    } else {
-      res.status(404).json({ message: 'Post não encontrado' });
-    }
-  });
-  
-  app.delete('/api/posts/:id', (req, res) => {
-    const postId = parseInt(req.params.id);
-    posts = posts.filter(post => post.id !== postId);
-    res.json({ message: 'Post excluído com sucesso' });
   });
 
 client.on('loading_screen', (percent, message) => {

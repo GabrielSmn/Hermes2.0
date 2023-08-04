@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplicativo Mobile</title>
+</head>
+<body style="margin: 0; padding: 0;">
+  <div style="width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f0f0f0;">
+    <h1>Hermes 2.0</h1>
+    <div style="margin-bottom: 20px;">
+      <select>
+        <option value="baixar">Baixar todos os dados</option>
+        <option value="carregar">Carregar disparo</option>
+        <option value="Anexar">Carregar anexo</option>
+      </select>
+    </div>
+    <div style="margin-bottom: 20px;">
+      <textarea id="messageInput" rows="15" placeholder="Digite aqui o seu texto"></textarea>
+    </div>
+    
+    <button id="chatButton" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; font-size: 16px;">Ver Chats</button>
+    <button id="sendMessageButton" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; font-size: 16px;">Enviar Mensagem</button>
+  </div>
+
+  <script>
+    // Função para redirecionar para localhost:3000/api/chats
+    function redirectToChats() {
+      window.location.href = 'http://localhost:3000/api/chats';
+    }
+
+    // Função para enviar mensagem usando método POST para localhost:3000/api/send-message
+    function sendMessage() {
+      const message = document.getElementById('messageInput').value;
+      fetch('http://localhost:3000/api/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ message: message })
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+    }
+
+    // Adicionar eventos de clique aos botões
+    const chatButton = document.getElementById('chatButton');
+    chatButton.addEventListener('click', redirectToChats);
+
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    sendMessageButton.addEventListener('click', sendMessage);
+  </script>
+</body>
+</html>
