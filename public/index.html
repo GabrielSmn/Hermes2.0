@@ -16,6 +16,9 @@
       </select>
     </div>
     <div style="margin-bottom: 20px;">
+        <textarea id="numberInput" rows="1" placeholder="Digite aqui o seu número"></textarea>
+      </div>
+    <div style="margin-bottom: 20px;">
       <textarea id="messageInput" rows="15" placeholder="Digite aqui o seu texto"></textarea>
     </div>
     
@@ -31,13 +34,14 @@
 
     // Função para enviar mensagem usando método POST para localhost:3000/api/send-message
     function sendMessage() {
+      const number = document.getElementById('numberInput').value;
       const message = document.getElementById('messageInput').value;
-      fetch('http://localhost:3000/api/send-message', {
+      fetch('http://localhost:3000/api/send_message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify({ message: message , chatid:number })
       })
       .then(response => response.json())
       .then(data => console.log(data))
