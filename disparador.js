@@ -1,11 +1,9 @@
 const { Client, Location, List, Buttons, LocalAuth } = require('./index');
 
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path'); // Importe a biblioteca path
-
 
 const app = express();
 const PORT = 3000;
@@ -32,11 +30,8 @@ let posts = [
 
 
 // Iniciar o servidor
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Servidor backend rodando em http://localhost:${PORT}`);
-
-  const localhostPage = await browser.newPage();
-  await localhostPage.goto(`http://localhost:${PORT}`, { waitUntil: 'domcontentloaded' });
 
 });
 
